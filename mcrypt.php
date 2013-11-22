@@ -302,9 +302,12 @@ class McryptBehavior extends ModelBehavior
 
 			foreach($fields_to_encrypt as $field){
 				//if the data exists and is not already encrypted...
-				$datatype = $Model->_schema[$field]['type'];
+				// Initialize your values
+				$datatype = array();
 				$value = null;
 				if(array_key_exists($field, $Model->data[$Model->alias])){
+					// now you are sure that the data exists 
+					$datatype = $Model->_schema[$field]['type'];
 					$value = $Model->data[$Model->alias][$field];
 				}
 				if(!empty($value)
@@ -527,7 +530,9 @@ class McryptBehavior extends ModelBehavior
 			}else{
 				if(in_array($key, $this->config[$this->modelName]['fields']) && $curModel == $this->modelName){
 					$values[$key] = $this->_decryptField($value);
-				}
+				}  else if(in_array($curModel.'.'.$key, $this->config[$this->modelName]['fields'])){
+			                $values[$key] = $this->_decryptField($value);
+		                }
 			}
 			$index++;
 		}
